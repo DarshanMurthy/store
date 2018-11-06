@@ -22,6 +22,8 @@ import com.oracle.javafx.jmx.json.JSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +46,25 @@ public class Account {
     private final String name;
     private AccountStatus status;
     private final int snapshotVersion;
+
+
+    public short getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public AccountStatus getStatus() {
+        return status;
+    }
+
+    public int getSnapshotVersion() {
+        return snapshotVersion;
+    }
+
+
 
     // internal datastructure
     private final Map<Short, Container> containerIdToContainerMap = new HashMap<>();
@@ -75,6 +96,39 @@ public class Account {
                 }
         }
     }
+
+    Account(short id, String name, AccountStatus status, int snapshotVersion,Collection<Container> containers){
+        this.id = id;
+        this.name = name;
+        this.status =status;
+        this.snapshotVersion = snapshotVersion;
+        checkRequiredFieldsForBuild();
+        if (containers != null){
+            for(Container container: containers){
+                checkParentAccoutnIdInContainers(container);
+
+            }
+
+        }
+
+    }
+    private void checkParentAccoutnIdInContainers(Container container){
+        if(container.getParentAccountId()!=id){
+            throw new IllegalStateException(
+                    "Container does not belong to this account"
+            );
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     private void checkRequiredFieldsForBuild(){
         if( name == null || status == null) {
             throw  new IllegalStateException("Either of required fields name="+ name+ "or status"+ status+ " is null");
@@ -83,9 +137,14 @@ public class Account {
     private void checkParentAccountIdInContainers(Container container){
 
     }
+
     public enum AccountStatus {
         ACTIVE, INACTIVE;
     }
+    public Collection<Container> getAllContainers(){
+        return Collections.unmodifiableCollection(containerIdToContainerMap.values());
+    }
+
 
 
 

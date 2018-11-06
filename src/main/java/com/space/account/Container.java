@@ -70,6 +70,32 @@ public class Container {
 
 
     //contanier field variables
+    private  final short id;
+    private final String name;
+    private final ContainerStatus status;
+    private final String description;
+
+    public short getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ContainerStatus getStatus() {
+        return status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public short getParentAccountId() {
+        return parentAccountId;
+    }
+
     private final short parentAccountId;
 
     private Container(JSONObject metadata, short parentAccoutId) {
@@ -92,14 +118,6 @@ public class Container {
     public enum ContainerStatus {
         ACTIVE, INACTIVE
     }
-
-
-
-
-
-
-
-
 
 
 
